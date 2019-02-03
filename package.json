@@ -42,5 +42,8 @@
     "prettier-config-bitworkers": "^1.4.1",
     "typescript": "^3.3.1",
     "vscode": "^1.1.28"
+  },
+  "dependencies": {
+    "@types/node": "^10.12.18"
   }
 }
