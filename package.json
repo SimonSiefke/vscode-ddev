@@ -8,7 +8,7 @@
     "vscode": "^1.29.0"
   },
   "categories": [
-    "ddev"
+    "Other"
   ],
   "activationEvents": [
     "onCommand:extension.ddevStart",
