@@ -1,0 +1,46 @@
+{
+  "name": "ddev",
+  "displayName": "ddev",
+  "description": "ddev integration for vscode",
+  "version": "0.0.1",
+  "publisher": "SimonSiefke",
+  "engines": {
+    "vscode": "^1.29.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.ddevStart",
+    "onCommand:extension.ddevComposerInstall"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.ddevStart",
+        "title": "ddev: Start"
+      },
+      {
+        "command": "extension.ddevComposerInstall",
+        "title": "ddev: Composer install"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^3.1.4",
+    "vscode": "^1.1.25",
+    "@types/node": "^8.10.25",
+    "@types/mocha": "^2.2.42"
+  },
+  "dependencies": {
+    "run-in-terminal": "0.0.3"
+  }
+}
