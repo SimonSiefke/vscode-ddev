@@ -2,13 +2,13 @@
   "name": "ddev",
   "displayName": "ddev",
   "description": "ddev integration for vscode",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "SimonSiefke",
   "engines": {
     "vscode": "^1.29.0"
   },
   "categories": [
-    "Other"
+    "ddev"
   ],
   "activationEvents": [
     "onCommand:extension.ddevStart",
@@ -36,16 +36,11 @@
     "publish": "vsce publish"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^8.10.25",
     "eslint": "^5.13.0",
     "eslint-config-bitworkers": "^1.14.0",
     "prettier": "^1.16.4",
     "prettier-config-bitworkers": "^1.4.1",
-    "typescript": "^3.1.4",
-    "vscode": "^1.1.25"
-  },
-  "dependencies": {
-    "run-in-terminal": "0.0.3"
+    "typescript": "^3.3.1",
+    "vscode": "^1.1.28"
   }
 }
