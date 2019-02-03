@@ -7,6 +7,11 @@ const exec = util.promisify(require('child_process').exec)
  * runs a command
  */
 async function runCommand(command: string) {
+  const hasDdevFolderOpen = vscode.workspace.rootPath
+  if (!hasDdevFolderOpen) {
+    vscode.window.showErrorMessage(`[ddev] you need to open a project first`, { modal: true })
+    return
+  }
   const { err, stdout } = await exec(command)
   if (err) {
     vscode.window.showErrorMessage(`[ddev] ${stdout}`)

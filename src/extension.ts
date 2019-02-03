@@ -1,11 +1,13 @@
 import * as vscode from 'vscode'
 import { registerCommands } from './commands'
+import * as manifest from '../package.json'
 
+// TODO ddev progress: https://github.com/Microsoft/vscode-extension-samples/tree/master/progress-sample
 /**
  * this is run when the extension is activated
  */
 export function activate(context: vscode.ExtensionContext) {
-  console.log('[ddev] activated')
+  console.info(`[ddev] v${manifest.version} activated!`)
   registerCommands(context)
 }
 
