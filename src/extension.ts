@@ -22,6 +22,15 @@ const commands = {
       }
     })
   },
+  ddevComposerInstall() {
+    cp.exec('ddev composer install', (err, stdout) => {
+      if (err) {
+        vscode.window.showErrorMessage(`[ddev] ${stdout}`)
+      } else {
+        vscode.window.showInformationMessage(`[ddev] ${stdout}`)
+      }
+    })
+  },
 }
 
 /**
@@ -29,7 +38,11 @@ const commands = {
  */
 function registerCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.ddevStart', commands.ddevStart)
+    vscode.commands.registerCommand('extension.ddevStart', commands.ddevStart),
+    vscode.commands.registerCommand(
+      'extension.ddevComposerInstall',
+      commands.ddevComposerInstall
+    )
   )
 }
 
