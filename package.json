@@ -2,7 +2,7 @@
   "name": "ddev",
   "displayName": "ddev",
   "description": "ddev integration for vscode",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "SimonSiefke",
   "engines": {
     "vscode": "^1.29.0"

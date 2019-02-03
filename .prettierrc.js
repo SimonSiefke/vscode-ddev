@@ -1,1 +1,4 @@
-module.exports = require('prettier-config-bitworkers')
+module.exports = {
+  ...require('prettier-config-bitworkers'),
+  printWidth: 100,
+}
