@@ -49,6 +49,12 @@
   },
   "release": {
     "verifyConditions": [
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
       "semantic-release-vsce",
       "@semantic-release/github"
     ],
