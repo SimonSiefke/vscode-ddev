@@ -60,13 +60,10 @@
     "vscode": "^1.1.28"
   },
   "release": {
+    "plugins": [
+      "@semantic-release/changelog"
+    ],
     "verifyConditions": [
-      [
-        "@semantic-release/changelog",
-        {
-          "changelogFile": "CHANGELOG.md"
-        }
-      ],
       "semantic-release-vsce",
       "@semantic-release/github"
     ],
