@@ -20,11 +20,17 @@
   ],
   "activationEvents": [
     "onCommand:extension.ddevStart",
+    "onCommand:extension.ddevStop",
+    "onCommand:extension.ddevConfig",
     "onCommand:extension.ddevComposerInstall"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "extension.ddevConfig",
+        "title": "ddev: Config"
+      },
       {
         "command": "extension.ddevStart",
         "title": "ddev: Start"

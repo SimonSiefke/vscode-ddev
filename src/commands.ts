@@ -33,6 +33,9 @@ const commands = {
   ddevComposerInstall() {
     runCommand('ddev composer install')
   },
+  ddevConfig() {
+    runCommand('ddev config')
+  },
 }
 
 /**
@@ -42,6 +45,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('extension.ddevStart', commands.ddevStart),
     vscode.commands.registerCommand('extension.ddevStop', commands.ddevStop),
-    vscode.commands.registerCommand('extension.ddevComposerInstall', commands.ddevComposerInstall)
+    vscode.commands.registerCommand('extension.ddevComposerInstall', commands.ddevComposerInstall),
+    vscode.commands.registerCommand('extension.ddevConfig', commands.ddevConfig)
   )
 }
