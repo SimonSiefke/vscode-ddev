@@ -37,6 +37,7 @@
     "semantic-release": "semantic-release"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^3.0.2",
     "@types/node": "^10.12.21",
     "eslint": "^5.13.0",
     "eslint-config-bitworkers": "^1.14.0",
