@@ -79,6 +79,7 @@
       "packageVsix": "ddev.vsix"
     },
     "publish": [
+      "@semantic-release/changelog",
       "semantic-release-vsce",
       {
         "path": "@semantic-release/github",
