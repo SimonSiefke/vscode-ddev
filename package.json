@@ -23,7 +23,8 @@
     "onCommand:extension.ddevStop",
     "onCommand:extension.ddevConfig",
     "onCommand:extension.ddevComposerInstall",
-    "onCommand:extension.ddevImportDB"
+    "onCommand:extension.ddevImportDB",
+    "onCommand:extension.ddevExportDB"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -47,6 +48,10 @@
       {
         "command": "extension.ddevImportDB",
         "title": "ddev: Import db"
+      },
+      {
+        "command": "extension.ddevExportDB",
+        "title": "ddev: Export db"
       }
     ]
   },

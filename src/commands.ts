@@ -39,6 +39,9 @@ const commands = {
   ddevImportDB() {
     runCommand('ddev import-db')
   },
+  ddevExportDB() {
+    runCommand('ddev export-db')
+  },
 }
 
 /**
@@ -50,6 +53,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('extension.ddevStop', commands.ddevStop),
     vscode.commands.registerCommand('extension.ddevComposerInstall', commands.ddevComposerInstall),
     vscode.commands.registerCommand('extension.ddevConfig', commands.ddevConfig),
-    vscode.commands.registerCommand('extension.ddevImportDB', commands.ddevImportDB)
+    vscode.commands.registerCommand('extension.ddevImportDB', commands.ddevImportDB),
+    vscode.commands.registerCommand('extension.ddevExportDB', commands.ddevExportDB)
   )
 }
