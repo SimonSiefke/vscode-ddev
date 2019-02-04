@@ -5,6 +5,12 @@
   "version": "0.0.0-semantically-released",
   "publisher": "SimonSiefke",
   "license": "MIT",
+  "homepage": "https://github.com/SimonSiefke/vscode-ddev/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SimonSiefke/vscode-ddev"
+  },
+  "bugs": "https://github.com/SimonSiefke/vscode-ddev/issues",
   "engines": {
     "vscode": "^1.29.0"
   },
