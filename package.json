@@ -87,13 +87,19 @@
       "@semantic-release/git"
     ],
     "verifyConditions": [
+      "@semantic-release/changelog",
       "semantic-release-vsce",
       "@semantic-release/github"
     ],
-    "prepare": {
-      "path": "semantic-release-vsce",
-      "packageVsix": "ddev.vsix"
-    },
+    "prepare": [
+      {
+        "path": "@semantic-release/changelog"
+      },
+      {
+        "path": "semantic-release-vsce",
+        "packageVsix": "ddev.vsix"
+      }
+    ],
     "publish": [
       "semantic-release-vsce",
       {
