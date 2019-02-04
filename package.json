@@ -23,6 +23,10 @@
         "title": "ddev: Start"
       },
       {
+        "command": "extension.ddevStop",
+        "title": "ddev: Stop"
+      },
+      {
         "command": "extension.ddevComposerInstall",
         "title": "ddev: Composer install"
       }

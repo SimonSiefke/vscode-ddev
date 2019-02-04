@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as util from 'util'
 
-const exec = util.promisify(require('child_process').exec)
+const exec = util.promisify(require('child_process').exec) // function for executing a shell command
 
 /**
  * runs a command
@@ -27,6 +27,9 @@ const commands = {
   ddevStart() {
     runCommand('ddev start')
   },
+  ddevStop() {
+    runCommand('ddev stop')
+  },
   ddevComposerInstall() {
     runCommand('ddev composer install')
   },
@@ -38,6 +41,7 @@ const commands = {
 export function registerCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('extension.ddevStart', commands.ddevStart),
+    vscode.commands.registerCommand('extension.ddevStop', commands.ddevStop),
     vscode.commands.registerCommand('extension.ddevComposerInstall', commands.ddevComposerInstall)
   )
 }
