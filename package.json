@@ -4,6 +4,7 @@
   "description": "ddev integration for vscode",
   "version": "0.0.0-semantically-released",
   "publisher": "SimonSiefke",
+  "icon": "ddev_icon.png",
   "license": "MIT",
   "homepage": "https://github.com/SimonSiefke/vscode-ddev/blob/master/README.md",
   "repository": {
