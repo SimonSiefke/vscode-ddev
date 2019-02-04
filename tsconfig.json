@@ -8,7 +8,8 @@
     "rootDir": ".",
     "skipLibCheck": true,
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "."
   },
   "exclude": ["node_modules", ".vscode-test"]
 }
