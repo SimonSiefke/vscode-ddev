@@ -1,7 +1,5 @@
 language: node_js
-sudo: false
 
-node_js:
-  - '6.11.2'
+node_js: lts/*
 
 script: npm run compile
