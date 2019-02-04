@@ -2,7 +2,7 @@
   "name": "ddev",
   "displayName": "ddev",
   "description": "ddev integration for vscode",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publisher": "SimonSiefke",
   "engines": {
     "vscode": "^1.29.0"
@@ -33,7 +33,8 @@
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "npm run compile && node ./node_modules/vscode/bin/test",
-    "publish": "vsce publish"
+    "publish": "vsce publish",
+    "semantic-release": "semantic-release"
   },
   "devDependencies": {
     "@types/node": "^10.12.21",
@@ -41,7 +42,26 @@
     "eslint-config-bitworkers": "^1.14.0",
     "prettier": "^1.16.4",
     "prettier-config-bitworkers": "^1.4.1",
+    "semantic-release": "^15.13.3",
+    "semantic-release-vsce": "^2.1.2",
     "typescript": "^3.3.1",
     "vscode": "^1.1.28"
+  },
+  "release": {
+    "verifyConditions": [
+      "semantic-release-vsce",
+      "@semantic-release/github"
+    ],
+    "prepare": {
+      "path": "semantic-release-vsce",
+      "packageVsix": "ddev.vsix"
+    },
+    "publish": [
+      "semantic-release-vsce",
+      {
+        "path": "@semantic-release/github",
+        "assets": "ddev.vsix"
+      }
+    ]
   }
 }
