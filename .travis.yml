@@ -4,7 +4,4 @@ sudo: false
 node_js:
   - '6.11.2'
 
-jobs:
-  include:
-    - stage: 'compile'
-      name: Compile
+script: npm run compile
