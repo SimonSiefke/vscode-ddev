@@ -3,3 +3,17 @@
 # vscode-ddev
 
 > VSCode extension to integrate ddev into VSCode
+
+## Features
+
+- ddev start
+- ddev stop
+
+## RoadMap
+
+- ddev config
+- ddev import-db
+- ddev export-db
+- ddev list
+- ddev composer install
+- ddev logs
