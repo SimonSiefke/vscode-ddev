@@ -8,6 +8,7 @@
 
 - ddev start
 - ddev stop
+- ddev composer install
 
 ## RoadMap
 
@@ -15,5 +16,4 @@
 - ddev import-db
 - ddev export-db
 - ddev list
-- ddev composer install
 - ddev logs
