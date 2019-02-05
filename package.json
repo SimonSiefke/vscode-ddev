@@ -26,7 +26,7 @@
     "onCommand:extension.ddevImportDB",
     "onCommand:extension.ddevExportDB"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension",
   "contributes": {
     "commands": [
       {
@@ -56,12 +56,10 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run build",
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test",
-    "publish": "vsce publish",
     "semantic-release": "semantic-release"
   },
   "devDependencies": {
@@ -74,38 +72,10 @@
     "eslint-config-bitworkers": "^1.14.0",
     "prettier": "^1.16.4",
     "prettier-config-bitworkers": "^1.4.1",
-    "semantic-release": "^15.13.3",
-    "semantic-release-vsce": "^2.1.2",
-    "typescript": "^3.3.1",
-    "vscode": "^1.1.28"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/git"
-    ],
-    "verifyConditions": [
-      "@semantic-release/changelog",
-      "semantic-release-vsce",
-      "@semantic-release/github"
-    ],
-    "prepare": [
-      {
-        "path": "@semantic-release/changelog"
-      },
-      {
-        "path": "semantic-release-vsce",
-        "packageVsix": "ddev.vsix"
-      }
-    ],
-    "publish": [
-      "semantic-release-vsce",
-      {
-        "path": "@semantic-release/github",
-        "assets": "ddev.vsix"
-      }
-    ]
+    "ts-loader": "^5.3.3",
+    "typescript": "3.3.1",
+    "vscode": "^1.1.28",
+    "webpack": "^4.29.1",
+    "webpack-cli": "^3.2.3"
   }
 }

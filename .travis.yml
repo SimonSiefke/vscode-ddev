@@ -3,7 +3,7 @@ language: node_js
 node_js: lts/*
 
 script:
-  - npm run compile
+  - npm run build # check that the build is passing
 
 stages:
   - test

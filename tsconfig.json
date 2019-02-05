@@ -1,15 +1,10 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es6",
     "target": "es6",
-    "outDir": "out",
     "lib": ["esnext"],
     "sourceMap": true,
-    "rootDir": ".",
-    "skipLibCheck": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "baseUrl": "."
+    "rootDir": "."
   },
-  "exclude": ["node_modules", ".vscode-test"]
+  "include": ["src/**/*.ts", "./node_modules/vscode/vscode.d.ts"]
 }

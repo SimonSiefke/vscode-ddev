@@ -1,0 +1,21 @@
+{
+  // See http://go.microsoft.com/fwlink/?LinkId=827846
+  // for the documentation about the extensions.json format
+  "recommendations": [
+    // Lint-on-save with ESLint
+    // https://github.com/Microsoft/vscode-eslint
+    "dbaeumer.vscode-eslint",
+    // Format-on-save with Prettier
+    // https://github.com/prettier/prettier-vscode
+    "esbenp.prettier-vscode",
+    // Better intellisense
+    // https://github.com/MicrosoftDocs/intellicode
+    "VisualStudioExptTeam.vscodeintellicode",
+    // Npm Support
+    // https://github.com/Microsoft/vscode-npm-scripts
+    "eg2.vscode-npm-script",
+    // Npm intellisense
+    // https://github.com/ChristianKohler/NpmIntellisense
+    "christian-kohler.npm-intellisense"
+  ]
+}

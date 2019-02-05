@@ -1,29 +1,32 @@
 import * as vscode from 'vscode'
-import * as util from 'util'
-
-const exec = util.promisify(require('child_process').exec) // function for executing a shell command
+import * as cp from 'child_process'
 
 /**
  * runs a command
  */
 async function runCommand(command: string) {
+  console.log(`[ddev] ${JSON.stringify(vscode.workspace.workspaceFolders)}`)
+
   const hasDdevFolderOpen = vscode.workspace.rootPath
   if (!hasDdevFolderOpen) {
     vscode.window.showErrorMessage(`[ddev] you need to open a project first`, { modal: true })
     return
   }
-  const { err, stdout } = await exec(command)
-  if (err) {
-    vscode.window.showErrorMessage(`[ddev] ${stdout}`)
-  } else {
-    vscode.window.showInformationMessage(`[ddev] ${stdout}`)
-  }
+  cp.exec(command, (error, stdout) => {
+    if (error) {
+      vscode.window.showErrorMessage(`[ddev] ${stdout}`)
+    } else {
+      vscode.window.showInformationMessage(`[ddev] ${stdout}`)
+    }
+  })
 }
+
+type Command = () => void
 
 /**
  * these are the commands available from the command palette
  */
-const commands = {
+const commands: { [key: string]: Command } = {
   ddevStart() {
     runCommand('ddev start')
   },
