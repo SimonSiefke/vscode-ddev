@@ -4,3 +4,7 @@ src/**
 package-json.lock
 tsconfig.json
 webpack.config.js
+.prettierrc.js
+.eslintrc.js
+renovate.json
+.eslintignore
