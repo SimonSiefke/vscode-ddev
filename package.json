@@ -78,5 +78,34 @@
     "vscode": "^1.1.28",
     "webpack": "^4.29.1",
     "webpack-cli": "^3.2.3"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/git"
+    ],
+    "verifyConditions": [
+      "@semantic-release/changelog",
+      "semantic-release-vsce",
+      "@semantic-release/github"
+    ],
+    "prepare": [
+      {
+        "path": "@semantic-release/changelog"
+      },
+      {
+        "path": "semantic-release-vsce",
+        "packageVsix": "ddev.vsix"
+      }
+    ],
+    "publish": [
+      "semantic-release-vsce",
+      {
+        "path": "@semantic-release/github",
+        "assets": "ddev.vsix"
+      }
+    ]
   }
 }
