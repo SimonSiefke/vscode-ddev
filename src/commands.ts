@@ -2,40 +2,48 @@ import * as vscode from 'vscode'
 import * as cp from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
+
+/**
+ *
+ */
+function isWorkspaceValid() {
+  // 1. one folder must be open
+  const hasDdevFolderOpen = vscode.workspace.rootPath
+  if (!hasDdevFolderOpen) {
+    vscode.window.showErrorMessage(`[ddev] you need to open a project first`, { modal: true })
+    return false
+  }
+
+  // 2. only one folder mst be open
+  const hasMultipleFoldersOpen = vscode.workspace.workspaceFolders.length >= 2
+  if (hasMultipleFoldersOpen) {
+    vscode.window.showErrorMessage(
+      `[ddev] this extension currently only works with one open folder`,
+      { modal: true }
+    )
+    return false
+  }
+
+  // 3. the folder must contain a .ddev folder
+  const folderPath = vscode.workspace.workspaceFolders[0].uri.fsPath
+  const hasDdevFolderInside = fs.existsSync(path.join(folderPath, '.ddev'))
+  if (!hasDdevFolderInside) {
+    vscode.window.showErrorMessage(`[ddev] Couldn't find a .ddev folder inside your workspace`)
+    return false
+  }
+  return true
+}
+
 /**
  * runs a command
  */
 async function runCommand(command: string) {
   return new Promise((resolve, reject) => {
-    const hasDdevFolderOpen = vscode.workspace.rootPath
-    if (!hasDdevFolderOpen) {
-      vscode.window.showErrorMessage(`[ddev] you need to open a project first`, { modal: true })
-      reject()
-    }
-    const hasMultipleFoldersOpen = vscode.workspace.workspaceFolders.length >= 2
-    if (hasMultipleFoldersOpen) {
-      vscode.window.showErrorMessage(
-        `[ddev] this extension currently only works with one open folder`,
-        { modal: true }
-      )
-      reject()
-    }
-
     const folderPath = vscode.workspace.workspaceFolders[0].uri.fsPath
-    const hasDdevFolderInside = fs.existsSync(path.join(folderPath, '.ddev'))
-    if (!hasDdevFolderInside) {
-      vscode.window.showInformationMessage(
-        `[ddev] Couldn't find a .ddev folder in your workspace`,
-        {
-          modal: true,
-        }
-      )
-      reject()
-    }
     cp.exec(`cd ${folderPath} && ${command}`, (error, stdout) => {
+      console.log(stdout)
       if (error) {
-        vscode.window.showErrorMessage(`[ddev] ${stdout}`)
-        reject()
+        reject(new Error(`[ddev] ${stdout}`))
       } else {
         resolve()
       }
@@ -50,39 +58,46 @@ type Command = () => void
  */
 const commands: { [key: string]: Command } = {
   async ddevStart() {
+    if (!isWorkspaceValid()) {
+      return
+    }
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: 'Starting ddev container...',
+        title: '[ddev] Starting container...',
         cancellable: true,
       },
-      (progress, token) => {
-        token.onCancellationRequested(() => {
-          console.log('User canceled the long running operation')
-        })
-        return runCommand('ddev start')
-      }
+      () => runCommand('ddev start')
     )
-    vscode.window.showInformationMessage(`ddev container started`)
+    vscode.window.showInformationMessage(`[ddev] container started`)
   },
   async ddevStop() {
+    if (!isWorkspaceValid()) {
+      return
+    }
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: 'Stopping ddev container...',
+        title: '[ddev] stopping container...',
         cancellable: true,
       },
-      (progress, token) => {
-        token.onCancellationRequested(() => {
-          console.log('User canceled the long running operation')
-        })
-        return runCommand('ddev stop')
-      }
+      () => runCommand('ddev stop')
     )
-    vscode.window.showInformationMessage(`ddev container stopped`)
+    vscode.window.showInformationMessage(`[ddev] container stopped`)
   },
-  ddevComposerInstall() {
-    runCommand('ddev composer install')
+  async ddevComposerInstall() {
+    if (!isWorkspaceValid()) {
+      return
+    }
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: '[ddev] installing dependencies with composer',
+        cancellable: true,
+      },
+      () => runCommand('ddev composer install')
+    )
+    vscode.window.showInformationMessage(`[ddev] composer dependencies installed`)
   },
   ddevConfig() {
     runCommand('ddev config')
