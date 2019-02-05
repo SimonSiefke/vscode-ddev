@@ -14,7 +14,7 @@ function isWorkspaceValid() {
     return false
   }
 
-  // 2. only one folder mst be open
+  // 2. only one folder must be open
   const hasMultipleFoldersOpen = vscode.workspace.workspaceFolders.length >= 2
   if (hasMultipleFoldersOpen) {
     vscode.window.showErrorMessage(
@@ -41,7 +41,11 @@ async function runCommand(command: string) {
   return new Promise((resolve, reject) => {
     const folderPath = vscode.workspace.workspaceFolders[0].uri.fsPath
     cp.exec(`cd ${folderPath} && ${command}`, (error, stdout) => {
-      console.log(stdout)
+      // composer doesn't throw an error, but may print an error to the console
+      const isProbablyComposerError = stdout.includes('could not find')
+      if (isProbablyComposerError) {
+        reject(new Error(`[ddev] ${stdout}`))
+      }
       if (error) {
         reject(new Error(`[ddev] ${stdout}`))
       } else {
@@ -86,6 +90,7 @@ const commands: { [key: string]: Command } = {
     vscode.window.showInformationMessage(`[ddev] container stopped`)
   },
   async ddevComposerInstall() {
+    // TODO check if composer.json exists and handle print a pretty error message
     if (!isWorkspaceValid()) {
       return
     }
@@ -100,12 +105,15 @@ const commands: { [key: string]: Command } = {
     vscode.window.showInformationMessage(`[ddev] composer dependencies installed`)
   },
   ddevConfig() {
+    // TODO
     runCommand('ddev config')
   },
   ddevImportDB() {
+    // TODO
     runCommand('ddev import-db')
   },
   ddevExportDB() {
+    // TODO
     runCommand('ddev export-db')
   },
 }
