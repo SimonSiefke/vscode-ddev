@@ -3,6 +3,7 @@ import * as cp from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as glob from 'glob'
+import * as Url from 'url-parse'
 
 /**
  * returns the path of the currently open folder in vscode
@@ -45,24 +46,20 @@ function isWorkspaceValid() {
 /**
  * runs a command
  */
-async function runCommand(command: string) {
+async function runCommand(command: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    const folderPath = vscode.workspace.workspaceFolders[0].uri.fsPath
-    cp.exec(`cd ${folderPath} && ${command}`, (error, stdout) => {
+    cp.exec(command, { cwd: cwd() }, (error, stdout: string) => {
       // composer doesn't throw an error, but prints it to the console
       const isProbablyComposerError = stdout.includes('could not find')
       // sql doesn't throw an error, but prints it to the console
       const isProbablySQLError = stdout.includes('ERROR')
       if (isProbablyComposerError || isProbablySQLError) {
-        // vscode.window.showErrorMessage(`[ddev] ${stdout}`)
-        // console.error('[ddev] ERROR', stdout)
         reject(new Error(`[ddev] ${stdout}`))
       }
       if (error) {
-        // console.error('[ddev] ERROR', stdout)
         reject(new Error(`[ddev] ${stdout}`))
       } else {
-        resolve()
+        resolve(stdout.trim())
       }
     })
   })
@@ -81,15 +78,19 @@ const commands: { [key: string]: Command } = {
     if (!isWorkspaceValid()) {
       return
     }
+    let info: string
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
         title: '[ddev] Starting container...',
         cancellable: true,
       },
-      () => runCommand('ddev start')
+      async () => {
+        info = await runCommand('ddev start')
+      }
     )
-    vscode.window.showInformationMessage(`[ddev] container started`)
+    const localhostUrl = new Url(info.match(/http:\/\/127.*$/)[0])
+    vscode.window.showInformationMessage(`[ddev] running on localhost:${localhostUrl.port}`)
   },
   /**
    * ddev stop command
