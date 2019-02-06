@@ -13,3 +13,4 @@
 
 - ddev stop all
 - ddev remove all
+- ddev open

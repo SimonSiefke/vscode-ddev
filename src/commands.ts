@@ -5,6 +5,8 @@ import * as path from 'path'
 import * as glob from 'glob'
 import * as Url from 'url-parse'
 
+import opn = require('opn')
+
 /**
  * returns the path of the currently open folder in vscode
  */
@@ -91,6 +93,16 @@ const commands: { [key: string]: Command } = {
     )
     const localhostUrl = new Url(info.match(/http:\/\/127.*$/)[0])
     vscode.window.showInformationMessage(`[ddev] running on localhost:${localhostUrl.port}`)
+    if (vscode.workspace.getConfiguration('ddev').autoOpen) {
+      const browser = vscode.workspace.getConfiguration('ddev').defaultBrowser
+      try {
+        await opn(localhostUrl.toString(), { app: browser })
+      } catch {
+        vscode.window.showErrorMessage(
+          `[ddev] Opening browser failed. Please check if you have installed the browser ${browser} correctly!`
+        )
+      }
+    }
   },
   /**
    * ddev stop command
