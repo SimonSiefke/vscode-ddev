@@ -1,6 +1,6 @@
 const path = require('path')
 
-/**@type {import('webpack').Configuration}*/
+/** @type {import('webpack').Configuration} */
 module.exports = {
   target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
 
@@ -17,8 +17,8 @@ module.exports = {
     vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
   },
   resolve: {
-    // support reading TypeScript files, 📖 -> https://github.com/TypeStrong/ts-loader
-    extensions: ['.ts'],
+    // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
+    extensions: ['.ts', '.js'],
   },
   module: {
     rules: [

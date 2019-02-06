@@ -9,11 +9,11 @@
 - ddev start
 - ddev stop
 - ddev composer install
+- ddev import-db
 
 ## RoadMap
 
 - ddev config
-- ddev import-db
 - ddev export-db
 - ddev list
 - ddev logs
