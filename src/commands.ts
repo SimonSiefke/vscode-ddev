@@ -150,7 +150,7 @@ const commands: { [key: string]: Command } = {
     }
     // search for sql files in the current folder
     glob(
-      '**/*.sql',
+      '**/*.+(sql|sql.gz|tar|tar.gz|zip)',
       { ignore: '**/+(node_modules|vendor|web|.git|import-db)/**', cwd: cwd(), dot: true },
       async (_, files) => {
         if (files.length === 0) {
