@@ -2,7 +2,7 @@
 
 # vscode-ddev
 
-> VSCode extension to integrate ddev into VSCode
+> VSCode extension to integrate [ddev](https://github.com/drud/ddev) into VSCode
 
 ## Features
 
