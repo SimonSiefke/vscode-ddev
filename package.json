@@ -96,7 +96,7 @@
     "@types/glob": "^7.1.1",
     "@types/node": "^10.12.21",
     "@types/opn": "^5.1.0",
-    "@types/url-parse": "^1.4.2",
+    "@types/url-parse": "^1.4.3",
     "eslint": "^5.13.0",
     "eslint-config-bitworkers": "^1.14.0",
     "husky": "^1.3.1",
