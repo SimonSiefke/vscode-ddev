@@ -73,7 +73,7 @@ async function runCommand(
       })
     }
     let totalData = ``
-    process.stdout.on('data', async (dataBuffer) => {
+    process.stdout.on('data', async dataBuffer => {
       const data = dataBuffer.toString()
       if (debug) {
         console.log(`[ddev] ${data}`)
@@ -106,11 +106,11 @@ async function runCommand(
       }
       totalData += data
     })
-    process.on('error', (err) => {
+    process.on('error', err => {
       reject(err)
     })
 
-    process.on('exit', (code) => {
+    process.on('exit', code => {
       // composer doesn't throw an error, but prints it to the console
       const isProbablyComposerError = totalData.includes('could not find')
       // sql doesn't throw an error, but prints it to the console
