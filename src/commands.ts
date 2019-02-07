@@ -7,6 +7,10 @@ import * as Url from 'url-parse'
 
 import opn = require('opn')
 
+const debug =
+  process.env.NODE_ENV === 'development' ||
+  vscode.workspace.getConfiguration('ddev').loglevel === 'debug'
+
 /**
  * returns the path of the currently open folder in vscode
  */
@@ -48,20 +52,79 @@ function isWorkspaceValid() {
 /**
  * runs a command
  */
-async function runCommand(command: string): Promise<string> {
+async function runCommand(
+  {
+    command,
+    args = [],
+  }: {
+    command: string
+    args: string[]
+  },
+  token?: vscode.CancellationToken
+): Promise<string> {
   return new Promise((resolve, reject) => {
-    cp.exec(command, { cwd: cwd() }, (error, stdout: string) => {
-      // composer doesn't throw an error, but prints it to the console
-      const isProbablyComposerError = stdout.includes('could not find')
-      // sql doesn't throw an error, but prints it to the console
-      const isProbablySQLError = stdout.includes('ERROR')
-      if (isProbablyComposerError || isProbablySQLError) {
-        reject(new Error(`[ddev] ${stdout}`))
+    const process = cp.spawn(command, args, { cwd: cwd() })
+    if (token) {
+      token.onCancellationRequested(() => {
+        if (debug) {
+          console.log('[ddev] operation was canceled by user')
+        }
+        process.kill()
+      })
+    }
+    let totalData = ``
+    process.stdout.on('data', async (dataBuffer) => {
+      const data = dataBuffer.toString()
+      if (debug) {
+        console.log(`[ddev] ${data}`)
       }
-      if (error) {
-        reject(new Error(`[ddev] ${stdout}`))
+      if (data.includes('May we send anonymous ddev usage statistics and errors?')) {
+        const choice = await vscode.window.showQuickPick(
+          [{ label: 'yes' }, { label: 'no' }],
+          {
+            placeHolder: 'Allow ddev to send anonymous usage statistics?',
+            ignoreFocusOut: true,
+          },
+          token
+        )
+        switch (choice.label) {
+          case 'yes':
+            process.stdin.write('Y\n')
+            if (debug) {
+              console.log('Y\n')
+            }
+            break
+          case 'no':
+            process.stdin.write('n\n')
+            if (debug) {
+              console.log('n\n')
+            }
+            break
+          default:
+            throw new Error('[ddev] invalid choice')
+        }
+      }
+      totalData += data
+    })
+    process.on('error', (err) => {
+      reject(err)
+    })
+
+    process.on('exit', (code) => {
+      // composer doesn't throw an error, but prints it to the console
+      const isProbablyComposerError = totalData.includes('could not find')
+      // sql doesn't throw an error, but prints it to the console
+      const isProbablySQLError = totalData.includes('ERROR')
+      if (isProbablyComposerError || isProbablySQLError) {
+        reject(new Error(totalData))
+      }
+      if (code) {
+        if (debug) {
+          console.log(`[ddev] command exited with status ${code}`)
+        }
+        reject(new Error(`command exited with status ${code}`))
       } else {
-        resolve(stdout.trim())
+        resolve(totalData.trim())
       }
     })
   })
@@ -81,18 +144,32 @@ const commands: { [key: string]: Command } = {
       return
     }
     let info: string
-    await vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: '[ddev] Starting container...',
-        cancellable: true,
-      },
-      async () => {
-        info = await runCommand('ddev start')
+    let canceled = false
+    try {
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: '[ddev] Starting container...',
+          cancellable: true,
+        },
+        async (progress, token) => {
+          token.onCancellationRequested(() => {
+            canceled = true
+          })
+          info = await runCommand({ command: 'ddev', args: ['start'] }, token)
+        }
+      )
+    } catch (error) {
+      if (debug) {
+        console.log(`[ddev] ${error.message}`)
       }
-    )
+      vscode.window.showErrorMessage(error.message)
+      return
+    }
+    if (canceled) {
+      return
+    }
     const localhostUrl = new Url(info.match(/http:\/\/127.*$/)[0])
-    vscode.window.showInformationMessage(`[ddev] running on localhost:${localhostUrl.port}`)
     if (vscode.workspace.getConfiguration('ddev').autoOpen) {
       const browser = vscode.workspace.getConfiguration('ddev').defaultBrowser
       try {
@@ -102,6 +179,8 @@ const commands: { [key: string]: Command } = {
           `[ddev] Opening browser failed. Please check if you have installed the browser ${browser} correctly!`
         )
       }
+    } else {
+      vscode.window.showInformationMessage(`[ddev] running on localhost:${localhostUrl.port}`)
     }
   },
   /**
@@ -116,14 +195,17 @@ const commands: { [key: string]: Command } = {
         {
           location: vscode.ProgressLocation.Notification,
           title: '[ddev] stopping container...',
-          cancellable: true,
         },
-        () => runCommand('ddev stop')
+        () => runCommand({ command: 'ddev', args: ['stop'] })
       )
-      vscode.window.showInformationMessage(`[ddev] container stopped`)
     } catch (error) {
+      if (debug) {
+        console.log(`[ddev] ${error.message}`)
+      }
       vscode.window.showErrorMessage(error.message)
+      return
     }
+    vscode.window.showInformationMessage(`[ddev] container stopped`)
   },
   /**
    * ddev composer install command
@@ -133,6 +215,7 @@ const commands: { [key: string]: Command } = {
     if (!isWorkspaceValid()) {
       return
     }
+    let canceled = false
     try {
       await vscode.window.withProgress(
         {
@@ -140,19 +223,31 @@ const commands: { [key: string]: Command } = {
           title: '[ddev] installing dependencies with composer',
           cancellable: true,
         },
-        () => runCommand('ddev composer install')
+        (progress, token) => {
+          token.onCancellationRequested(() => {
+            canceled = true
+          })
+          return runCommand({ command: 'ddev', args: ['composer', 'install'] }, token)
+        }
       )
-      vscode.window.showInformationMessage(`[ddev] composer dependencies installed`)
     } catch (error) {
+      if (debug) {
+        console.log(`[ddev] ${error.message}`)
+      }
       vscode.window.showErrorMessage(error.message)
+      return
     }
+    if (canceled) {
+      return
+    }
+    vscode.window.showInformationMessage(`[ddev] composer dependencies installed`)
   },
   /**
    * ddev config command
    */
   ddevConfig() {
     // TODO
-    runCommand('ddev config')
+    // runCommand('ddev config')
   },
   /**
    * ddev import db command
@@ -172,6 +267,7 @@ const commands: { [key: string]: Command } = {
         }
         // let the user select a database
         const selected = await vscode.window.showQuickPick(files)
+        let canceled = false
         try {
           await vscode.window.withProgress(
             {
@@ -179,12 +275,29 @@ const commands: { [key: string]: Command } = {
               title: `[ddev] importing ${selected}`,
             },
             // import the selected database
-            () => runCommand(`ddev import-db --src=${selected}`)
+            (progress, token) => {
+              token.onCancellationRequested(() => {
+                canceled = true
+              })
+              return runCommand(
+                {
+                  command: `ddev`,
+                  args: [`import-db`, `--src=${selected}`],
+                },
+                token
+              )
+            }
           )
-          vscode.window.showInformationMessage(`[ddev] ${selected} imported`)
         } catch (error) {
+          if (debug) {
+            console.log(`[ddev] ${error.message}`)
+          }
           vscode.window.showErrorMessage(error.message)
         }
+        if (canceled) {
+          return
+        }
+        vscode.window.showInformationMessage(`[ddev] ${selected} imported`)
       }
     )
   },
@@ -193,7 +306,7 @@ const commands: { [key: string]: Command } = {
    */
   ddevExportDB() {
     // TODO
-    runCommand('ddev export-db')
+    // runCommand('ddev export-db')
   },
 }
 

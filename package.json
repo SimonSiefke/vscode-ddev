@@ -41,6 +41,15 @@
           "type": "string",
           "default": "firefox",
           "description": "Use this browser"
+        },
+        "ddev.loglevel": {
+          "type": "string",
+          "default": "firefox",
+          "description": "Use this browser",
+          "oneOf": [
+            "silent",
+            "debug"
+          ]
         }
       }
     },
