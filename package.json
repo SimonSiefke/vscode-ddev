@@ -4,7 +4,7 @@
   "description": "ddev integration for vscode",
   "version": "0.0.0-semantically-released",
   "publisher": "SimonSiefke",
-  "icon": "ddev_icon.png",
+  "icon": "icon.png",
   "license": "MIT",
   "homepage": "https://github.com/SimonSiefke/vscode-ddev/blob/master/README.md",
   "repository": {
@@ -85,8 +85,7 @@
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
     "lint": "eslint . --ext .ts",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "semantic-release": "semantic-release"
+    "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^3.0.2",

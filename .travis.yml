@@ -15,5 +15,5 @@ jobs:
   include:
     - stage: release
       language: node_js
-      node_js: 'lts/*'
-      script: npm run semantic-release
+      node_js: "lts/*"
+      script: npx semantic-release
